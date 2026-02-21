@@ -1,6 +1,6 @@
 # ワークで実装
-ACCESS_TOKEN = 'ここにアクセストークンを記入してください'
-TAPYRUS_API_ENDPOINT_URL = 'ここにURLを記入してください'
+ACCESS_TOKEN = 'rGkloGGVWSyyMsch259WMBaxdUWhLqspGrJa5svCxiqxQJ3rMagct3LzuVi9pOO9'
+TAPYRUS_API_ENDPOINT_URL = 'https://yzjwv84b.api.tapyrus.chaintope.com'
 
 class TapyrusApi
   include Singleton
@@ -22,18 +22,45 @@ class TapyrusApi
 
     def post_addresses(purpose: "general")
       # ワーク2.で実装
+        res = instance.connection.post("/api/v1/addresses") do |req|
+        req.headers['Authorization'] = "Bearer #{instance.access_token}"
+        req.headers['Content-Type'] = 'application/json'
+        req.body = JSON.generate({ "purpose" => purpose })
+      end
+    
+      res.body
     end
 
     def post_tokens_issue(amount:, token_type: 1, split: 1)
       # ワーク3.で実装
+        res = instance.connection.post("/api/v1/tokens/issue") do |req|
+        req.headers['Authorization'] = "Bearer #{instance.access_token}"
+        req.headers['Content-Type'] = 'application/json'
+        req.body = JSON.generate({ "amount" => amount, "token_type" => token_type, "split" => split })
+      end
+    
+      res.body
     end
 
     def put_tokens_transfer(token_id, address:, amount:)
       # ワーク4.で実装
+        res = instance.connection.put("/api/v1/tokens/#{token_id}/transfer") do |req|
+        req.headers['Authorization'] = "Bearer #{instance.access_token}"
+        req.headers['Content-Type'] = 'application/json'
+        req.body = JSON.generate({ "address" => address, "amount" => amount })
+      end
+  
+      res.body
     end
 
     def get_tokens(confirmation_only = true)
       # ワーク5.で実装
+        res = instance.connection.get("/api/v1/tokens") do |req|
+        req.headers['Authorization'] = "Bearer #{instance.access_token}"
+        req.params['confirmation_only'] = confirmation_only
+      end
+    
+      res.body
     end
 
     def get_userinfo(confirmation_only = true)
